@@ -1,0 +1,21 @@
+# Ghostty config. install.ps1 fills in @CONFIG_DIR@ and @USERPROFILE@ and writes
+# the result to %LOCALAPPDATA%\ghostty\config.ghostty.
+
+# Look
+theme = Monokai Pro Spectrum
+background = #11100F
+cursor-color = #F37021
+font-family = Courier Prime
+font-size = 24
+font-thicken = true
+
+# Cursor effects from sahaj-b/ghostty-cursor-shaders. The animations keep
+# running while the window is unfocused, so the line cursor does not freeze.
+custom-shader = @CONFIG_DIR@/shaders/cursor_warp.glsl
+custom-shader = @CONFIG_DIR@/shaders/ripple_cursor.glsl
+custom-shader-animation = always
+
+# zsh from MSYS2. zoxide, fzf and the tools Neovim uses are set up in ~/.zshrc.
+command = C:\msys64\usr\bin\zsh.exe
+env = MSYSTEM=UCRT64
+env = HOME=@USERPROFILE@

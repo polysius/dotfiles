@@ -1,0 +1,36 @@
+# zsh for Ghostty on Windows (MSYS2). zoxide and fzf come from the ucrt64 packages.
+export PATH=/ucrt64/bin:/usr/bin:$PATH
+
+# MSYS2 has no xterm-ghostty entry by default, so fall back if it is missing.
+if [[ $TERM == xterm-ghostty ]] && ! infocmp xterm-ghostty >/dev/null 2>&1; then
+  export TERM=xterm-256color
+fi
+
+autoload -Uz compinit && compinit -u
+
+# Better history
+HISTFILE=~/.zsh_history
+HISTSIZE=50000
+SAVEHIST=50000
+setopt SHARE_HISTORY HIST_IGNORE_DUPS
+
+# The native tools print Windows line endings, which zsh cannot evaluate, so
+# carriage returns are removed first.
+CR=$'\r'
+
+# zoxide: `z foo` jumps to a folder you used before, `zi` picks with fzf.
+command -v zoxide >/dev/null && eval "$(zoxide init zsh | tr -d "$CR")"
+
+# zoxide's MSYS template is missing a command substitution in __zoxide_pwd and
+# ends up passing the literal text "builtin pwd -L". Redefine it correctly.
+__zoxide_pwd() {
+  command cygpath -w "$(builtin pwd -L)"
+}
+
+# fzf: Ctrl-T files, Ctrl-R history, Alt-C folders.
+command -v fzf >/dev/null && source <(fzf --zsh | tr -d "$CR")
+
+# Neovim is the editor, and it is always started from this shell in Ghostty.
+export EDITOR=nvim
+alias vi=nvim
+alias v=nvim
