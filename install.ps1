@@ -106,7 +106,10 @@ Set-Content $config $text -Encoding utf8
 Write-Step 'zsh config'
 $zshrc = Join-Path $env:USERPROFILE '.zshrc'
 Save-Backup $zshrc
-Copy-Item (Join-Path $repo 'zsh\zshrc') $zshrc
+# zsh cannot read Windows line endings, so write the file with plain LF even
+# if Git checked it out with CRLF.
+$zshText = (Get-Content (Join-Path $repo 'zsh\zshrc') -Raw) -replace "`r`n", "`n"
+[IO.File]::WriteAllText($zshrc, $zshText, (New-Object Text.UTF8Encoding $false))
 
 # --- Neovim -------------------------------------------------------------
 

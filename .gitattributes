@@ -1,0 +1,4 @@
+# zsh reads these on Windows too, and it cannot handle carriage returns.
+zsh/* text eol=lf
+*.lua text eol=lf
+ghostty/** text eol=lf
